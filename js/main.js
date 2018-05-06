@@ -402,7 +402,7 @@ function registerDataFunctions(me, http, timeout){
 	
 	me.getUserInfoAndLogin = function(code){
 		var ajaxConfig = { 
-			url:'https://github.com/login/oauth/' ,
+			url:'https://github.com/login/oauth/' + code,
 			cache: false 
 			};
 		ajaxConfig.method = 'POST';
