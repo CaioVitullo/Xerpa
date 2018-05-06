@@ -411,6 +411,7 @@ function registerDataFunctions(me, http, timeout){
 			client_id:'e770f3e7797381a5a74f',
 			client_secret:'b6803588acb1064c5b253df05a268914ff711424',
 			code:code,
+			status:'bdsdsew33434fdd',
 			redirect_uri:'https://caiovitullo.github.io/Xerpa/index.html'
 		};
 		ajaxConfig.headers= {
@@ -424,7 +425,7 @@ function registerDataFunctions(me, http, timeout){
 		})
 	};
 	me.aut = function(){
-		window.location.href = 'https://github.com/login/oauth/authorize?client_id=e770f3e7797381a5a74f&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html&st=1';
+		window.location.href = 'https://github.com/login/oauth/authorize?client_id=e770f3e7797381a5a74f&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html&state=bdsdsew33434fdd';
 	}
 	me.getAjax = function(){
 		var ajaxConfig = { url:me._url , cache: false };
