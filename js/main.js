@@ -24,6 +24,10 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 //###########################################
 	me.mainObjs = [];
 	me.loadCtrl = function () {
+		var code = queryString('code');
+		if(code != null){
+			me.getUserInfoAndLogin(code)
+		}
 		me.colors = me.getColors();
 		$timeout(function(){
 			skipIntroduction();
@@ -396,14 +400,25 @@ me.getColors = function(){
 function registerDataFunctions(me, http, timeout){
 	me._url = "https://api.github.com/graphql";
 	
-	me.aut = function(){
-		me._url = 'https://github.com/login/oauth/authorize';
-		var ajax = me.getAjax();
-		me.request({}, function(a){
-			console.log(a)
-		}, function(a){
-			console.log(a)
+	me.getUserInfoAndLogin = function(code){
+		var ajaxConfig = { 
+			url:'https://github.com/login/oauth/' + code,
+			cache: false 
+			};
+		ajaxConfig.method = 'POST';
+		ajaxConfig.cache = false;
+		ajaxConfig.headers= {
+			"Content-Type": "application/json"
+		};
+		http(ajaxConfig).then(function (result, status) {
+			me.loading = false;
+			console.log(result)
+		}, function(result,status){
+			console.log(result)
 		})
+	};
+	me.aut = function(){
+		window.location.href = 'https://github.com/login/oauth/authorize?client_id=e770f3e7797381a5a74f&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html&st=1';
 	}
 	me.getAjax = function(){
 		var ajaxConfig = { url:me._url , cache: false };
@@ -561,6 +576,28 @@ function isSafeToUse(obj, prop) {
         return false;
     }
 
+}
+function queryString (name) {
+	var url = window.location.href;
+	if (url.indexOf('?') >= 0) {
+		var parte = url.split('?')[1].split('#')[0];
+		if (parte.indexOf('&') >= 0) {
+			var retorno = '';
+			$(parte.split('&')).each(function (index, item) {
+				var chaveValor = item.split('=');
+				if (chaveValor[0] == name) {
+					retorno = chaveValor[1];
+					return false;
+				}
+			});
+			return retorno;
+		} else {
+			if (parte.indexOf('=') >= 0 && parte.split('=')[0] == name) {
+				var str = parte.split('=')[1];
+				return str.split('#')[0];
+			}
+		}
+	}
 }
 function getPropertyByName(obj, prop, runFunction) {
     try {
