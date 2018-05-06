@@ -411,7 +411,7 @@ function registerDataFunctions(me, http, timeout){
 		ajaxConfig.cache = false;
 		ajaxConfig.headers= {
 			"Content-Type": "application/json",
-			"Authorization": "bearer 3859577752a933e3a4c5c5dceecf0a4c6aa32319" 
+			"Authorization": "bearer 3a262c0ca7c7204e4ce83b80cdc25d4bdbb0450f" 
 		};
 		return ajaxConfig;
 	}

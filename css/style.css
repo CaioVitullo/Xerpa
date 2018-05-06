@@ -1,6 +1,8 @@
 /* ================ GERAL ================ */
 body{
 	overflow-x: hidden;
+	height: 100%;
+    overflow: hidden;
 }
 .mainContent{
 	max-width: 2000px;
