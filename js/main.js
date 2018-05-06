@@ -402,7 +402,7 @@ function registerDataFunctions(me, http, timeout){
 	
 	me.getUserInfoAndLogin = function(code){
 		var ajaxConfig = { 
-			url:'https://github.com/login/oauth/' + code + '?client_id=e770f3e7797381a5a74f&client_secret=b6803588acb1064c5b253df05a268914ff711424&code='+code+'&state=bdsdsew33434fdd&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html',
+			url:'https://github.com/login/oauth/access_token?client_id=e770f3e7797381a5a74f&client_secret=b6803588acb1064c5b253df05a268914ff711424&code='+code+'&state=bdsdsew33434fdd&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html',
 			cache: false 
 			};
 		ajaxConfig.method = 'POST';
