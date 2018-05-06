@@ -1,0 +1,13 @@
+<div class="singleLine">
+    <div class="c1 f1 m1" style="padding-left:{{ml}}px;" >
+        <i class="fakeW">&nbsp;</i>
+        {{data.propriedade}}
+    </div>
+    <div class="c2">
+        <span class="meta" style="margin-left:calc({{data.target}}% - 12px);" title="{{'meta ' + meta}}">
+            <i ng-class="{metaOk:data.valor >= meta, metaNao:data.valor < meta}" class="material-icons" >arrow_drop_down</i>
+        </span>
+        <progress  style="margin-left:{{(100-level)}}%;width:{{level}}%"  value="{{data.valor}}" max="100"></progress>
+    </div>
+    <div class="c3">{{data.valor}}</div>
+</div>

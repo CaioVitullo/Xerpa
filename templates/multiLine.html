@@ -1,0 +1,18 @@
+<div class="multiLine" ng-init="data.showSubMenu = false">
+        <div class="c1 f1 m1" style="padding-left:{{ml}}px;" ng-click="data.showSubMenu = !data.showSubMenu">
+            <i ng-show="data.showSubMenu == false"  class="tiny material-icons">keyboard_arrow_right</i>
+            <i ng-show="data.showSubMenu == true"  class="tiny material-icons">keyboard_arrow_down</i>
+            {{data.propriedade}}
+        </div>
+        <div class="c2">
+            <span class="meta" style="margin-left:calc({{data.target}}% - 12px);" title="{{'meta ' + meta}}">
+                <i ng-class="{metaOk:data.valor >= meta, metaNao:data.valor < meta}" class="material-icons" >arrow_drop_down</i>
+            </span>
+            <progress style="margin-left:{{(100-level)}}%;width:{{level}}%"  value="{{data.valor}}" max="100"></progress>
+        </div>
+        <div class="c3">{{data.valor}}</div>
+        <div ng-show="data.showSubMenu==true" class="wrapper" ng-repeat="item in data.child track by $index">
+           <single-line ml="ml + 40" meta="meta" level="level-10" data="item" ng-if="item.child == null"></single-line>
+           <multi-line ml="ml + 40" meta="meta" level="level-10" data="item" ng-if="item.child != null"></single-line> 
+        </div>
+</div>

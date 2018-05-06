@@ -1,0 +1,13 @@
+<div>
+        <ul class="histUl histUlBig">
+            <li 
+                ng-repeat="item in histogram.data"
+                class="waves-effect waves-orange" title="Valores entre {{::item.low}}{{sufix}} e {{::item.high}}{{sufix}} &#013;&#010; {{::item.count}} ocorrência{{item.count!=1?'s':''}}({{::item.perc}}%) "
+                ng-mouseover="$parent.$parent.histHover(histogram,item)"
+                ng-click="$parent.$parent.histHover(histogram,item)"
+                style="height:{{item.height}}%;">
+                
+            </li>
+        </ul>
+    </div>
+    

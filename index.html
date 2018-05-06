@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" ng-app="mainApp">
+
+<head>
+
+	<title>Caio Vitullo @ Xerpa</title>
+	<meta charset="utf-8">
+
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+
+	<!-- Favicons -->
+
+	<style>
+		.txtRotateh1 {
+			font-family: 'Raleway', sans-serif;
+			padding: 1em 2em;
+			font-size: 2rem;
+			background: #222;
+			color: #30ad1b;
+			font-weight: 200;
+			margin: 0.4em 0;
+			position: fixed;
+			bottom: 0px;
+			width: 100%;
+
+		}
+
+		.pularintro {
+			color: #878788;
+			font-size: 24px;
+			margin-top: 10px;
+			cursor: pointer;
+		}
+	</style>
+	<!-- Favicons -->
+
+</head>
+
+<body class="noselect">
+	<div class="rotate" onclick="removeRotateGif()"></div>
+
+	<div ng-controller="ctrl" id="mainCtrl" class="mainContent">
+		<div class="navbar-fixed" ng-init="loadCtrl()">
+			<nav class="nav-extended">
+				<div class="nav-wrapper container">
+
+					<a data-activates="slide-out" id="mobileMenu" class="button-collapse">
+						<i class="material-icons">menu</i>
+					</a>
+					<label class="mainHeader">&nbsp;</label>
+
+
+					<ul id="nav-mobile" class="right hide-on-med-and-down">
+						<li>
+							<a ng-click="aut()">Name</a>
+						</li>
+					</ul>
+					<ul class="side-nav" id="slide-out">
+						<li>
+							<a ng-click="aut()">LogIn</a>
+						</li>
+
+					</ul>
+				</div>
+			</nav>
+		</div>
+		<div class="navbar-fixed hide-on-med-and-down " style="display:none;">
+			<nav class="nav-extended sub-menu">
+				<div class="nav-wrapper container">
+
+				</div>
+			</nav>
+		</div>
+		<div class="container">
+			<section id="searchPage" ng-show="currentPageIndex == 0" class="valign-wrapper">
+				
+				<xerpa-search></xerpa-search>
+				<div class="row atBottom" ng-show="noUserFound == true && searchTxt.length > 0">
+					<img src="img/shame.png" /> 
+					<h3>User not Found </h1>
+
+				</div>
+
+			</section>
+			<section id="resultPage" ng-show="currentPageIndex == 1" >
+				<div class="row">
+					<div class="col s12">
+						<xerpa-search></xerpa-search>
+						<ul ng-show="langTypes != null" class="langChart ">
+								<li ng-repeat="lang in langTypes" title="{{lang.label + ': ' + lang.count }}" style="width:{{lang.percentage}}%" class="{{$parent.getCssForLang(lang,$index)}}"></li>
+							</ul>
+					</div>
+				</div>
+				<div class="row h100" ng-show="currentUser != null">
+					<div class="col s12 m4 l3 xl3 tac h100  vAligTop15 ">
+						<div class="deep-purple darken-1  halfH profileUpper">
+							<div ng-if="currentUser != null" style="background-image: url({{currentUser.avatarUrl}})" class="imgProfile">&nbsp;</div>
+							<label  ng-bind="currentUser.name"></label>
+							<label class="whiteIsh" ng-bind="currentUser.nick"></label>
+						</div>
+						<div class="deep-purple lighten-1  halfH profileBottom">
+							<label ng-bind="currentUser.bio"></label>
+							<label>
+								<i class="material-icons">people</i>
+								{{currentUser.company}}
+							</label>
+							<label>
+								<i class="material-icons">location_on</i>
+								{{currentUser.location}}
+							</label>
+							<label>
+								<i class="material-icons">email</i>
+								<a href="mailto:{{currentUser.email}}">{{currentUser.email}}</a> 
+							</label>
+							<label>
+								<i class="material-icons">language</i>
+								<a target="_blannk" href="{{currentUser.websiteUrl}}"> {{beautifyStr(currentUser.websiteUrl)}}</a>
+							</label> 
+							
+						</div>
+						
+					</div>
+					<div class="col s12 m8 l9 xl9 tac h100 ml0  repoList ">
+						
+						<ul class="collection w100 mainList">
+							
+							<li class="collection-item avatar tal hoverable z-depth-1" ng-repeat="item in currentUser.starredRepositories.edges">
+							  
+							  <span class="title" ng-bind="item.node.nameWithOwner">Title</span>
+							  <p >First Line 
+								{{item.node.description}}
+								<br>
+								<label>
+									{{item.node.primaryLanguage.name}}
+									
+									|
+									{{item.node.stargazers.totalCount}} stargazer
+								</label>
+								<label class="right">
+									<i class="material-icons" title="Locked" ng-show="item.node.isLocked==true">lock</i>
+									<i class="material-icons" title="Fork" ng-show="item.node.isLocked==isFork">device_hub</i>
+								</label>
+							  </p>
+							  <a  ng-click="startItem(item.node)" class="secondary-content">
+								  <i class="material-icons" title="add Star" ng-hide="item.node.starred==true">star_border</i>
+								  <i class="material-icons" title="remove Star" ng-show="item.node.starred==true">star</i>
+								</a>
+							</li>
+							
+						  </ul>
+					</div>
+				</div>
+				<div class="row h100 tac" ng-show="currentUser==null && noUserFound && loading==false">
+						<img src="img/shame.png" /> 
+						<h3>User not Found </h1>
+				</div>
+			</section>
+		</div>
+
+
+
+
+
+	</div>
+	<div id="preloading" onclick="skipIntroduction()">
+
+
+		<a class="pularintro" id="linkBoraProSite" style="display:none;">Pular introdução</a>
+		<a class="pularintro" id="loadingFP">Caregando dados...</a>
+
+	</div>
+
+
+
+	<footer class="row">
+		<div class="container">
+
+		</div>
+	</footer>
+
+	<script>
+
+		function skipIntroduction() {
+			window.introSkipped = true;
+
+			$('#preloading').hide();
+
+		}
+
+
+	</script>
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
+	
+	<script src="js/materialize.js"></script>
+	
+	<script src="js/main.js" charset="utf-8"></script>
+	
+
+</body>
+
+</html>

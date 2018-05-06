@@ -1,0 +1,39 @@
+<div class="card hoverable" ng-class="{bigCard:top==true,smallCard:top==false }"  ng-init=loadCtrl()>
+    <h5 title="{{data.name}}">
+        <i ng-show="data.parentID != null && mobile==true" class="material-icons openner" title="Voltar"  ng-click="goup()">arrow_upward</i>
+      <em ng-click="clickCanvas()">{{data.name}}</em>
+    </h5>
+        <div class="card-image waves-effect waves-block waves-light tac">
+            
+              <div class="wrapper " ng-repeat="item in data.DPQ.child track by $index">
+                 <single-line meta="meta" ml="ml" level="100" data="item" ng-if="item.child == null"></single-line>
+                 <multi-line ml="ml" meta="meta" level="100" data="item" ng-if="item.child != null"></multi-line>
+              </div>
+              <div>
+                <em class="totalValue" ng-show="data.DPQ.valor != -100">{{data.DPQ.valor}}</em>
+                <em class="totalValue" ng-show="data.DPQ.valor == -100">Indefinido</em>
+                <i ng-show="data.parentID != null && mobile==false && top == true" class="material-icons openner" title="Voltar"  ng-click="goup()">arrow_upward</i>
+                <progress style="width: 90%;margin: auto;" value="{{data.DPQ.valor}}" max="100"></progress>
+                 <i ng-hide="true" ng-show="mobile==false" class="activator material-icons openner">dehaze</i> 
+             </div>
+            
+        </div>
+        
+        <div class="card-reveal">
+          <!-- <span class="card-title grey-text text-darken-4">
+              <i ng-show="data.parentID != null && mobile==false && top==true" class="material-icons openner" title="Voltar"  ng-click="goup()">arrow_upward</i>
+            <em ng-click="clickCanvas()">{{data.name}}</em>
+            
+            <i ng-hide="true" class="material-icons right">close</i>
+          </span> -->
+          <h5 title="{{data.name}}">
+            <i ng-show="data.parentID != null && mobile==false && top == true" class="left material-icons openner" title="Voltar"  ng-click="goup()">arrow_upward</i>
+            <em ng-class="{arrumaML:top}" ng-click="clickCanvas()">{{data.name}}</em>
+          </h5>
+          <div class="chart-container" style="height: 100%;">
+            <canvas ></canvas>
+          </div>
+            
+        </div>
+        
+    </div>
