@@ -9,6 +9,7 @@ var mainApp = angular.module('mainApp', []).config(function($sceDelegateProvider
 	  'https://github.com/login/oauth',
 	  'https://github.com/login/',
 	  'https://github.com/' ,
+	  'http://github.com/' ,
 	  'https://github.com/login/oauth/access_token'
 	]);
   
@@ -499,7 +500,8 @@ mainApp.directive('xerpaSearch', function(){
 });
 
 $(document).ready(function() {
-    Materialize.updateTextFields();
+	Materialize.updateTextFields();
+	$('div[removeStyleOnLoad]').removeAttr('style');
   });
 function removeRotateGif() {
 	$('.rotate').remove();

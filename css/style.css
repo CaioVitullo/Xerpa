@@ -13,114 +13,12 @@ body{
 .row{
 	margin-bottom: 0 !important;
 }
-.line_svg{
-	width: 100vw;
-	height: 20vh;
-	margin-top: -100px;
-}
-.bkgExp1{
-	background: url('../img/INFO_DPQ_PESOS.png') 100% 100% no-repeat;
-	background-size: 100%;
-	background-position: center;
-}
-.bkgExp2{
-	background: url('../img/INFO_DPQ_INDICADORES.png') 100% 100% no-repeat;
-	background-size: 100%;
-	background-position: center;
-}
-.bkgExp3{
-	background: url('../img/INFO_DPQ_DETALHE.png') 100% 100% no-repeat;
-	background-size: 100%;
-	background-position: center;
-}
-.topo{
-	background: url('../img/bg_topo.png') 50% no-repeat;
-	background-size: cover;
-    height: 250vh;
-    width: 100%;
-    margin-top: -100px;
-}
 .space{
 	height: 43vh;
 }
 .sub-menu{
 	background: none;
 	box-shadow: none;
-}
-.btn-laranja{
-	background: #fe9e0f;
-    -webkit-box-shadow: 3px 3px #b97004;
-            box-shadow: 3px 3px #b97004;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-sizing: content-box;
-            box-sizing: content-box;
-    margin-top: 20px !important;
-    margin-right: 50px !important;
-    white-space: nowrap;
-    border-radius: 10px;
-    text-align: center;
-    width: 100px;
-    height: 45px;
-}
-.btn-laranja:hover, .btn-laranja:active, .btn-laranja:focus{
-	background: #d3830c;
-	-webkit-box-shadow: 3px 3px #975b03;
-            box-shadow: 3px 3px #975b03;
-}
-.btn-verde{
-	background: #1dcc0f;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-sizing: content-box;
-            box-sizing: content-box;
-    margin-top: 20px !important;
-    margin-right: 50px !important;
-    white-space: nowrap;
-    border-radius: 10px;
-    text-align: center;
-    width: 100px;
-    height: 45px;
-}
-.btn-verde:hover, .btn-verde:active, .btn-verde:focus{
-	background: #19af0d;
-}
-.btn-marrom{
-	background: #4a4025;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    -webkit-box-align: center;
-        -ms-flex-align: center;
-            align-items: center;
-    -webkit-box-sizing: content-box;
-            box-sizing: content-box;
-    margin-top: 20px !important;
-    white-space: nowrap;
-    border-radius: 10px;
-    text-align: center;
-    width: 120px;
-    height: 45px;
-}
-.btn-marrom:hover, .btn-marrom:active, .btn-marrom:focus{
-	background: #3b331e;
 }
 
 footer{
@@ -142,59 +40,7 @@ footer{
 		padding: 5% 0 35% 0 !important;
 	}
 }
-/*MQ*/
-/* ================ GERAL ================ */
-/* ================ PÁGINA INICIAL ================ */
-/*Itens montanha*/
-.item_passo{
-	color: #555;
-}
-.item_passo p{
-	font-size: 0.8rem;
-}
-.item_passo .txt_passo{
-	margin-left: 3% !important;
-}
-.row2{
-	margin-right: -14vw !important;
-    margin-top: 10vh;
-}
-.item2{
-	margin-left: 150px !important;
-    margin-top: -109px;
-}
-.txt_white{
-	color: #fff;
-}
-#sobre{
-	background: #428a2f;
-	padding: 5% 0;
-	color: #fff;
-}
-#comofunciona{
-	padding: 5% 0;
-	background: #397928;
-	color: #fff;
-}
-/*Itens montanha*/
-/*Cadastro*/
-#cadastro{
-	padding: 5% 0;
-	color: #fff;
-	background: #48902d; /* Old browsers */
-	background: -moz-linear-gradient(top, #48902d 0%, #4b912c 100%); /* FF3.6-15 */
-	background: -webkit-linear-gradient(top, #48902d 0%,#4b912c 100%); /* Chrome10-25,Safari5.1-6 */
-	background: linear-gradient(to bottom, #48902d 0%,#4b912c 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#48902d', endColorstr='#4b912c',GradientType=0 ); /* IE6-9 */
-}
-#cadastro .titulo{
-	margin-bottom: 0;
-}
-.head-form{
-	margin-bottom: 1%;
-}
-/*Cadastro*/
-/*Como funciona*/
+
 .titulo{
 	color: rgb(136, 133, 133);
 	font-variant: all-small-caps;
@@ -545,21 +391,7 @@ textarea::-webkit-input-placeholder {
 	50% {  opacity: 0.7;}
   }
 
-  #preloading{
-	position: fixed;
-    max-height: 100%;
-    overflow: hidden;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    z-index: 999;
-    margin: auto;
-    text-align: center;
-    background: url(../img/Z0e5O.gif) no-repeat center center;
-    background-color: rgba(255,255,255,1);
-  }
-
+ 
   .toast a{
 	cursor: pointer;
     color: #959892;
@@ -627,14 +459,7 @@ textarea::-webkit-input-placeholder {
 .invisible{
 	visibility: hidden;
 }
-.compareFundName span{
-	font-weight: bold;
-}
-.compareFundName em{
-	text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-}
+.
 .lblResume label{
 	display: block;
 	font-size: 1rem;
@@ -664,43 +489,6 @@ textarea::-webkit-input-placeholder {
 }
 .highlightNeg{
 	color:red;
-}
-.floating{
-	position: fixed;
-	bottom: 3%;
-	left: 3%;
-	width: 240px;
-	height: 150px;
-	border: 2px silver dashed;
-	padding: 10px;
-	z-index: 3;
-	background-color: rgba(57, 73, 93,0.9);
-}
-.floating .selectedFund{
-	width: 100px;
-	height: 100px;
-	padding: 5px;
-	text-align: center;
-	vertical-align: middle;
-	color: silver;
-	font-size: 10px;
-	display: table;
-	float: left;
-}
-
-.floating .selectedFund label{
-	font-size: 1rem;
-	display: table-cell;
-	vertical-align: middle;
-}
-.fullsquare{
-	background-color: #444;
-}
-.fullsquare td{
-	color:  #9e9e9e;
-}
-.emptysquare{
-	background-color: #f5f5f5;
 }
 .floating button{
 	width: 210px;
@@ -733,7 +521,7 @@ textarea::-webkit-input-placeholder {
 .mainHeader{
 	font-size: 2rem;
     font-family: 'Raleway', sans-serif;
-    background: url(../img/gitLogo.png) no-repeat bottom center;
+    background: url(/img/gitLogo.png) no-repeat bottom center;
     background-size: contain;
     height: 100%;
     width: 162px;
@@ -774,20 +562,6 @@ textarea::-webkit-input-placeholder {
 									supported by Chrome and Opera */
   }
 
-  .rotate{
-	position: fixed;
-    max-height: 100%;
-    overflow: hidden;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    z-index: 999;
-    margin: auto;
-    text-align: center;
-    background: url(../img/mobile.gif) no-repeat center center;
-    background-color: rgba(255,255,255,.7);
-  }
   
   .tdNotFound{
 	text-align: center;

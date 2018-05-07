@@ -9,37 +9,9 @@
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
 	<link rel="stylesheet" type="text/css" href="css/style.css">
-
-	<!-- Favicons -->
-
-	<style>
-		.txtRotateh1 {
-			font-family: 'Raleway', sans-serif;
-			padding: 1em 2em;
-			font-size: 2rem;
-			background: #222;
-			color: #30ad1b;
-			font-weight: 200;
-			margin: 0.4em 0;
-			position: fixed;
-			bottom: 0px;
-			width: 100%;
-
-		}
-
-		.pularintro {
-			color: #878788;
-			font-size: 24px;
-			margin-top: 10px;
-			cursor: pointer;
-		}
-	</style>
-	<!-- Favicons -->
-
 </head>
 
 <body class="noselect">
-	<div class="rotate" onclick="removeRotateGif()"></div>
 
 	<div ng-controller="ctrl" id="mainCtrl" class="mainContent">
 		<div class="navbar-fixed" ng-init="loadCtrl()">
@@ -78,7 +50,7 @@
 				
 				<xerpa-search id="1"></xerpa-search>
 				
-				<div class="row atBottom" ng-show="noUserFound == true && searchTxt.length > 0">
+				<div class="row atBottom" ng-show="noUserFound == true && searchTxt.length > 0" style="display: none;" removeStyleOnLoad>
 					<img src="img/shame.png" /> 
 					<h3>User not Found </h1>
 
@@ -150,7 +122,7 @@
 						  </ul>
 					</div>
 				</div>
-				<div class="row h100 tac" ng-show="currentUser==null && noUserFound && loading==false">
+				<div class="row h100 tac" ng-show="currentUser==null && noUserFound && loading==false" style="display: none;" removeStyleOnLoad>
 						<img src="img/shame.png" /> 
 						<h3>User not Found </h1>
 				</div>
