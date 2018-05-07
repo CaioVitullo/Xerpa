@@ -484,6 +484,7 @@ mainApp.directive('xerpaSearch', function(){
 		link: function($scope, $element, attr, parentDirectCtrl){
 			$($element).find('input').attr('id', 'inputSearch_' + attr.id)
 			$($element).find('label').attr('for', 'inputSearch_' + attr.id)
+			$($element).find('.input-field').attr('id', 'wrapper' + attr.id)
 		},
 		template: `
 			<div class="input-field w100">
