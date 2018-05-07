@@ -6280,6 +6280,7 @@ textarea.materialize-textarea + label:after {
 
 .input-field label:not(.label-icon).active {
   font-size: 0.8rem;
+  top: 0.2rem;
   -webkit-transform: translateY(-140%);
           transform: translateY(-140%);
 }
