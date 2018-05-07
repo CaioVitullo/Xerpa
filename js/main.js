@@ -1,5 +1,22 @@
 
-var mainApp = angular.module('mainApp', []);
+var mainApp = angular.module('mainApp', []).config(function($sceDelegateProvider, $httpProvider, $sceProvider) {
+	
+	$sceProvider.enabled(false);
+	$sceDelegateProvider.resourceUrlWhitelist([
+	  // Allow same origin resource loads.
+	  'self',
+	  // Allow loading from our assets domain.  Notice the difference between * and **.
+	  'https://github.com/login/oauth',
+	  'https://github.com/login/',
+	  'https://github.com/' ,
+	  'https://github.com/login/oauth/access_token'
+	]);
+  
+	// The blacklist overrides the whitelist so the open redirect here is blocked.
+	$sceDelegateProvider.resourceUrlBlacklist([
+	 
+	]);
+  });
 
 mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 	var me = $scope;
@@ -399,40 +416,15 @@ me.getColors = function(){
 //####################################################
 function registerDataFunctions(me, http, timeout){
 	me._url = "https://api.github.com/graphql";
-	me.get2 = function(){
-		var ajaxConfig = { 
-			url:'https://github.com/login/oauth/access_token?client_id=e770f3e7797381a5a74f&client_secret=b6803588acb1064c5b253df05a268914ff711424&code='+code+'&state=bdsdsew33434fdd&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html',
-			cache: false 
-		};
-		ajaxConfig.method = 'GET';
-		ajaxConfig.cache = false;
-		
-		ajaxConfig.headers= {
-			"Content-Type": "application/json"
-		};
-		http(ajaxConfig).then(function (result, status) {
-			console.log(result)
-		}, function(result,status){
-			console.log(result)
-		})
-	};
+	
 	me.getUserInfoAndLogin = function(code){
+		//me.ifSrc = 'https://github.com/login/oauth/access_token?client_id=e770f3e7797381a5a74f&client_secret=b6803588acb1064c5b253df05a268914ff711424&code='+code+'&state=bdsdsew33434fdd&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html';
+
 		var ajaxConfig = { 
 			url:'https://github.com/login/oauth/access_token?client_id=e770f3e7797381a5a74f&client_secret=b6803588acb1064c5b253df05a268914ff711424&code='+code+'&state=bdsdsew33434fdd&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html',
 			cache: false 
 		};
 		ajaxConfig.method = 'GET';
-		ajaxConfig.cache = false;
-		//  ajaxConfig.data = {
-		//  	client_id:'e770f3e7797381a5a74f',
-		//  	client_secret:'b6803588acb1064c5b253df05a268914ff711424',
-		//  	code:code,
-		//  	state:'bdsdsew33434fdd',
-		//  	redirect_uri:'https://caiovitullo.github.io/Xerpa/index.html'
-		//  };
-		ajaxConfig.headers= {
-			"Content-Type": "application/json"
-		};
 		http(ajaxConfig).then(function (result, status) {
 			console.log(result)
 		}, function(result,status){
