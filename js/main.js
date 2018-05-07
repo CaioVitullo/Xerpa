@@ -178,6 +178,7 @@ me.getCssForLang = function(lang, index){
 	
 	return me.colors[index % me.colors.length];
 }
+
 me.getColors = function(){
 	return [
 		'deep-purple',
@@ -442,7 +443,7 @@ mainApp.directive('xerpaSearch', function(){
 		template:`
 		<div class="input-field w100">
 		<div class="search-wrapper card w100">
-			<input tabindex="0" ng-disabled="loading" class="bbn" type="text" ng-focus="inputOnFocus()" ng-keyup="onInputChange($event)" ng-model="searchTxt" >
+			<input tabindex="0" id="icon_prefix" ng-disabled="loading" class="bbn" type="text" ng-focus="inputOnFocus()" ng-keyup="onInputChange($event)" ng-model="searchTxt" >
 			<i class="iconInside material-icons" ng-show="loading == false && searchTxt.length==0">search</i>
 			<i class="iconInside material-icons" ng-show="loading == false && searchTxt.length>0" title="limpar" ng-click="searchTxt=''">clear</i>
 			<i class="iconInside material-icons looping" ng-show="loading==true">sync</i>
@@ -452,6 +453,7 @@ mainApp.directive('xerpaSearch', function(){
 		`
 	};
 });
+
 
 function removeRotateGif() {
 	$('.rotate').remove();
