@@ -90,7 +90,7 @@
 					<div class="col s12">
 						<xerpa-search></xerpa-search>
 						<ul ng-show="langTypes != null" class="langChart ">
-								<li ng-repeat="lang in langTypes" title="{{lang.label + ': ' + lang.count }}" style="width:{{lang.percentage}}%" class="{{$parent.getCssForLang(lang,$index)}}"></li>
+								<li ng-repeat="lang in langTypes" title="{{lang.label + ': ' + lang.count + ' projeto' + (lang.count!=1?'s':'') }}" style="width:{{lang.percentage}}%" class="{{$parent.getCssForLang(lang,$index)}}"></li>
 							</ul>
 					</div>
 				</div>

@@ -1,7 +1,7 @@
 
 var mainApp = angular.module('mainApp', []).config(function($sceDelegateProvider, $httpProvider, $sceProvider) {
 	
-	$sceProvider.enabled(false);
+	
 	$sceDelegateProvider.resourceUrlWhitelist([
 	  // Allow same origin resource loads.
 	  'self',
@@ -28,7 +28,7 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 //###########################################
 //	PROPERTY
 //###########################################
-	me.searchTxt = 'sindresorhus';		//initial search text
+	me.searchTxt = window.location.href.indexOf("xerpa.dev.br") >=0 ? 'sindresorhus' : '';		//initial search text
 	me.noUserFound = false;	// true if the search return no result <- shows the walking man at the bottom
 	me.currentPageIndex = 0;
 	me.currentUser = null;
@@ -418,13 +418,15 @@ function registerDataFunctions(me, http, timeout){
 	me._url = "https://api.github.com/graphql";
 	
 	me.getUserInfoAndLogin = function(code){
-		//me.ifSrc = 'https://github.com/login/oauth/access_token?client_id=e770f3e7797381a5a74f&client_secret=b6803588acb1064c5b253df05a268914ff711424&code='+code+'&state=bdsdsew33434fdd&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html';
-
+		
+		var url = 'https://github.com/login/oauth/access_token?client_id=e770f3e7797381a5a74f&client_secret=b6803588acb1064c5b253df05a268914ff711424&code='+code+'&state=bdsdsew33434fdd&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html'
+		
 		var ajaxConfig = { 
-			url:'https://github.com/login/oauth/access_token?client_id=e770f3e7797381a5a74f&client_secret=b6803588acb1064c5b253df05a268914ff711424&code='+code+'&state=bdsdsew33434fdd&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html',
+			url:url,
 			cache: false 
 		};
-		ajaxConfig.method = 'GET';
+		ajaxConfig.method = 'POST';
+		
 		http(ajaxConfig).then(function (result, status) {
 			console.log(result)
 		}, function(result,status){
@@ -440,7 +442,7 @@ function registerDataFunctions(me, http, timeout){
 		ajaxConfig.cache = false;
 		ajaxConfig.headers= {
 			"Content-Type": "application/json",
-			"Authorization": "bearer 3a262c0ca7c7204e4ce83b80cdc25d4bdbb0450f" 
+			"Authorization": "bearer bc65744075d9e5b5e7332820a3300a728b0eb310" 
 		};
 		return ajaxConfig;
 	}
