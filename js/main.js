@@ -127,7 +127,7 @@ me.showUserResult = function(user){
 			if (!me.$$phase)
 				me.$apply();
 			$('#resultPage').slideDown('slow', function(){
-				
+				Materialize.updateTextFields()
 			})
 		});
 	}
