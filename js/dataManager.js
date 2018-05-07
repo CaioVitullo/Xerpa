@@ -156,9 +156,11 @@ function registerDataFunctions(me, http, timeout){
 	}
 	me.query = function(userName, onSuccess, onFail){
 		var user = null;
+		me.loading = true;
 		me.getUserProfile(userName, function(userResponse){
 			user=userResponse.data;
 			me.getUserStarredRepos(userName, function(repoResponse){
+				me.loading = false;
 				user.starredRepositories = repoResponse.data;
 				if(typeof(onSuccess) == 'function')
 					onSuccess(user);

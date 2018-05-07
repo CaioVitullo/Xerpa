@@ -117,14 +117,25 @@ me.userHasNotBeenFound = function(){
 me.clean = function(){
 	me.langTypes = null;
 	me.currentUser = null;
+	me.loading = false;
 };
 me.showUserResult = function(user){
-	me.currentPageIndex = 1;
+	if(me.currentPageIndex == 0){
+		$('#searchPage').slideUp('slow', function(){
+			me.currentPageIndex = 1;
+			if (!me.$$phase)
+				me.$apply();
+			$('#resultPage').slideDown('slow', function(){
+				
+			})
+		});
+	}
+	
 	me.currentUser = user;
 	me.searchTxtPlaceholder = 'Busque por outro nome/apelido...'
 	me.currentUser.nick = me.searchTxt;
 	console.log(me.currentUser);
-	me.searchTxt='';
+	//me.searchTxt='';
 	me.countLangType();
 }
 me.countLangType = function(){
@@ -150,15 +161,36 @@ me.startItem = function(repo){
 	if(me.loading ==true)
 		return
 
+	if(me.userStatus == me.Status.logOut){
+		me.toastOk('Please logIn before! - <a onclick="toastCallback()"> OK!</a>')
+		return;
+	}
+
 	if(compareIfSafe(repo, 'starred', true)){
 		me.removeStar(repo.id, 
-			function(result){repo.starred=false;me.onStarOk(result);} , 
-			function(result){repo.starred=false;me.onStarNotOk(result);})
+			function(result){
+				repo.starred=false;
+				me.onStarOk(result);
+				me.toastOk('Repo unStarred with success!  <a onclick="toastCallback()"> OK!</a>')
+			} , 
+			function(result){
+				repo.starred=false;
+				me.onStarNotOk(result);
+				me.toastOk('Oh No!We got some problema.  <a onclick="toastCallback()"> OK!</a>')
+			})
 	
 	}else{
 		me.starRepo(repo.id, 
-			function(result){repo.starred=true;me.onStarOk(result);} , 
-			function(result){repo.starred=false;me.onStarNotOk(result);})
+			function(result){
+				repo.starred=true;
+				me.onStarOk(result);
+				me.toastOk('Repo starred with success!  <a onclick="toastCallback()"> OK!</a>')
+			} , 
+			function(result){
+				repo.starred=false;
+				me.onStarNotOk(result);
+				me.toastOk('Oh No!We got some problema.  <a onclick="toastCallback()"> OK!</a>')
+			})
 	
 	}
 	
@@ -173,6 +205,13 @@ me.beautifyStr = function(str){
 	if(typeof(str)=='string')
 		return str.replace('https://', '').replace('http://', '')
 	return str;
+}
+me.toastOk = function(msg, time){
+	time = (time != null ? time : 5);
+	Materialize.toast(msg, time*1000, '', function(){}) ;
+	window.setTimeout(function(){
+		$('.toast').fadeOut();
+	}, time * 1000)
 }
 me.getCssForLang = function(lang, index){
 	
@@ -440,21 +479,28 @@ mainApp.directive('xerpaSearch', function(){
 	return {
 		replace:true,
 		restrict:'E',
-		template:`
-		<div class="input-field w100">
-		<div class="search-wrapper card w100">
-			<input autocomplete="off" tabindex="0" id="icon_prefix" ng-disabled="loading" class="bbn" type="text" ng-focus="inputOnFocus()" ng-keyup="onInputChange($event)" ng-model="searchTxt" >
-			<i class="iconInside material-icons" ng-show="loading == false && searchTxt.length==0">search</i>
-			<i class="iconInside material-icons" ng-show="loading == false && searchTxt.length>0" title="limpar" ng-click="searchTxt=''">clear</i>
-			<i class="iconInside material-icons looping" ng-show="loading==true">sync</i>
-			<label for="icon_prefix" ng-click="setInputFocus()" style="left:10px;" ng-bind="searchTxtPlaceholder"></label>
+		link: function($scope, $element, attr, parentDirectCtrl){
+			$($element).find('input').attr('id', 'inputSearch_' + attr.id)
+			$($element).find('label').attr('for', 'inputSearch_' + attr.id)
+		},
+		template: `
+			<div class="input-field w100">
+			<div class="search-wrapper card w100">
+				<input spellcheck="false" autocorrect="off" autocapitalize="off" autocomplete="off" tabindex="0"  ng-disabled="loading" class="bbn" type="text" ng-focus="inputOnFocus()" ng-keyup="onInputChange($event)" ng-model="searchTxt" >
+				<i class="iconInside material-icons" ng-show="loading == false && searchTxt.length==0">search</i>
+				<i class="iconInside material-icons" ng-show="loading == false && searchTxt.length>0" title="limpar" ng-click="searchTxt=''">clear</i>
+				<i class="iconInside material-icons looping" ng-show="loading==true">sync</i>
+				<label  style="left:10px;" ng-bind="searchTxtPlaceholder"></label>
+			</div>
 		</div>
-	</div>
-		`
+			`
+		 
 	};
 });
 
-
+$(document).ready(function() {
+    Materialize.updateTextFields();
+  });
 function removeRotateGif() {
 	$('.rotate').remove();
 }
@@ -469,3 +515,7 @@ function setCover(el) {
 function closeChartDialog(it) {
 	$(it).parent().modal('close');
 };
+
+function toastCallback(){
+	$('.toast').fadeOut();
+}
