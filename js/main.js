@@ -35,7 +35,7 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 	me.currentPageIndex = 0;
 	me.currentUser = null;
 	me.loading = false;		//request running
-	me.searchTxtPlaceholder = 'Pesquise pelo nome/apelido do github'
+	me.searchTxtPlaceholder = 'search by ngithub username'
 	me.langTypes = null		// resume of repos languages
 	me.colors = null;
 	me.userStatus = me.Status.logOut;
@@ -122,18 +122,19 @@ me.clean = function(){
 };
 me.showUserResult = function(user){
 	if(me.currentPageIndex == 0){
-		$('#searchPage').slideUp('slow', function(){
+		
+		var h = ($('.navbar-fixed').height() + $('#searchPage').height()/2.0) * 0.85;
+		$('.input-field .w100').eq(0).css({position:'absolut'}).animate({top:-h}, 800, function(){
 			me.currentPageIndex = 1;
 			if (!me.$$phase)
 				me.$apply();
-			$('#resultPage').slideDown('slow', function(){
-				Materialize.updateTextFields()
-			})
-		});
+			Materialize.updateTextFields()
+		})
+		
 	}
 	
 	me.currentUser = user;
-	me.searchTxtPlaceholder = 'Busque por outro nome/apelido...'
+	me.searchTxtPlaceholder = 'try another username...'
 	me.currentUser.nick = me.searchTxt;
 	console.log(me.currentUser);
 	//me.searchTxt='';
@@ -501,7 +502,7 @@ mainApp.directive('xerpaSearch', function(){
 
 $(document).ready(function() {
 	Materialize.updateTextFields();
-	$('div[removeStyleOnLoad]').removeAttr('style');
+	$('[removeStyleOnLoad]').removeAttr('style');
   });
 function removeRotateGif() {
 	$('.rotate').remove();
