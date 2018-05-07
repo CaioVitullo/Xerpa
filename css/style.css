@@ -531,8 +531,8 @@ textarea::-webkit-input-placeholder {
 .mainHeader{
 	font-size: 2rem;
     font-family: 'Raleway', sans-serif;
-    
-    
+    background: url(/img/gitLogo.png) no-repeat bottom center;
+    background-size: contain;
     height: 100%;
     width: 162px;
     display: inline-block;

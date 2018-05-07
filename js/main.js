@@ -35,7 +35,7 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 	me.currentPageIndex = 0;
 	me.currentUser = null;
 	me.loading = false;		//request running
-	me.searchTxtPlaceholder = 'search by ngithub username'
+	me.searchTxtPlaceholder = 'search by github username';
 	me.langTypes = null		// resume of repos languages
 	me.colors = null;
 	me.userStatus = me.Status.logOut;
