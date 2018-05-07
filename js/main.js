@@ -25,6 +25,7 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 //	ENUM
 //###########################################
 	me.keyCodes = {Enter:13, ESC:27};
+	me.Status = {logOut:0, logIn:1};
 //###########################################
 //	PROPERTY
 //###########################################
@@ -36,6 +37,7 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 	me.searchTxtPlaceholder = 'Pesquise pelo nome/apelido do github'
 	me.langTypes = null		// resume of repos languages
 	me.colors = null;
+	me.userStatus = me.Status.logOut;
 //###########################################
 //	INIT
 //###########################################
@@ -43,7 +45,8 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 	me.loadCtrl = function () {
 		var code = queryString('code');
 		if(code != null){
-			me.getUserInfoAndLogin(code)
+			var status = queryString('state')
+			me.onLoginCallBack(code, status);
 		}
 		me.colors = me.getColors();
 		$timeout(function(){
@@ -55,6 +58,23 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 //###########################################
 //	EVENTS
 //###########################################
+	me.onLoginCallBack = function(code, status){
+		me.getUserInfoAndLogin(code, status,function(){
+			me.backToPastState(status);
+		});
+		
+	};
+	me.backToPastState = function(status){
+		var pageStatusBefore = me.retrievePageStatus(status);
+		if(pageStatusBefore != null){
+			me.currentPageIndex = pageStatusBefore.currentPageIndex;
+			me.searchTxt = pageStatusBefore.searchTxt;
+			if(pageStatusBefore.login != null){
+				me.searchTxt = pageStatusBefore.login;
+				me.searchUserByName();
+			}
+		}
+	}
 	me.onInputChange = function(e){
 		if(e.keyCode == me.keyCodes.ESC)
 			me.searchTxt = '';
@@ -81,15 +101,13 @@ me.searchUserByName = function(){
 	if(me.loading ==true)
 		return
 	me.clean();
-	me.query(me.searchTxt,me.onFindUser, me.onUserNotFound);
+	me.query(me.searchTxt,me.onFindUser, me.userHasNotBeenFound);
 };
-me.onFindUser = function(data, status){
-	var result = data.data.data;
-	console.log(result);
-	if(result.user == null){
+me.onFindUser = function(user, status){
+	if(user == null){
 		me.userHasNotBeenFound();
 	}else{
-		me.showUserResult(result);
+		me.showUserResult(user);
 	}
 };
 me.userHasNotBeenFound = function(){
@@ -100,26 +118,26 @@ me.clean = function(){
 	me.langTypes = null;
 	me.currentUser = null;
 };
-me.showUserResult = function(result){
+me.showUserResult = function(user){
 	me.currentPageIndex = 1;
-	me.currentUser = result.user;
+	me.currentUser = user;
 	me.searchTxtPlaceholder = 'Busque por outro nome/apelido...'
 	me.currentUser.nick = me.searchTxt;
+	console.log(me.currentUser);
 	me.searchTxt='';
 	me.countLangType();
 }
 me.countLangType = function(){
 	var list = [];
-	me.currentUser.starredRepositories.edges.forEach(y => {
-		if(isSafeToUse(y,'node.primaryLanguage.name'))
-			list.push(y.node.primaryLanguage.name)
+	
+	me.currentUser.starredRepositories.forEach(y => {
+		if(isSafeToUse(y,'language'))
+			list.push(y.language)
 	});
 	list = list.countDistinct().orderDescBy('count');
 	me.langTypes = list.summaryze('count');
 };
-me.onUserNotFound = function(result, status){
-	me.currentUser = null;
-};
+
 me.startItem = function(repo){
 	if(isNotSafeToUse(me, 'starRepo')){
 		console.warn('Error!!! Data interface has not been implemented')
@@ -411,123 +429,7 @@ me.getColors = function(){
 };
 });
 
-//####################################################
-//               DATA ->
-//####################################################
-function registerDataFunctions(me, http, timeout){
-	me._url = "https://api.github.com/graphql";
-	
-	me.getUserInfoAndLogin = function(code){
-		
-		var url = 'https://github.com/login/oauth/access_token?client_id=e770f3e7797381a5a74f&client_secret=b6803588acb1064c5b253df05a268914ff711424&code='+code+'&state=bdsdsew33434fdd&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html'
-		
-		var ajaxConfig = { 
-			url:url,
-			cache: false 
-		};
-		ajaxConfig.method = 'POST';
-		
-		http(ajaxConfig).then(function (result, status) {
-			console.log(result)
-		}, function(result,status){
-			console.log(result)
-		})
-	};
-	me.aut = function(){
-		window.location.href = 'https://github.com/login/oauth/authorize?client_id=e770f3e7797381a5a74f&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html&state=bdsdsew33434fdd';
-	}
-	me.getAjax = function(){
-		var ajaxConfig = { url:me._url , cache: false };
-		ajaxConfig.method = 'POST';
-		ajaxConfig.cache = false;
-		ajaxConfig.headers= {
-			"Content-Type": "application/json",
-			"Authorization": "bearer bc65744075d9e5b5e7332820a3300a728b0eb310" 
-		};
-		return ajaxConfig;
-	}
-	me.query = function(name, onSuccess, onError){
-		var data = {
-		query: `query { 
-			user(login:"` + name + `"){
-				avatarUrl
-				bio
-				name
-				id
-				company
-				email
-				followers(last: 100) {
-				totalCount
-				}
-				repositories(last:100){totalCount}
-				location
-				websiteUrl
-				starredRepositories(last:100){
-				edges{
-					node{
-					description
-					id
-					name
-					descriptionHTML
-					stargazers(last:100){totalCount}
-					forkCount
-					isPrivate
-					isLocked
-					isFork
-					primaryLanguage{name}
-					nameWithOwner
-					
-					}
-				}
-				}
-			}
-			}`
-		};
-		me.request(data, onSuccess, onError);
-	}
-	
-	me.removeStar = function(idRepo, onSuccess, onError){
-		var data = {
-			query:`
-			mutation {
-				removeStar(input: {
-				  clientMutationId: "MDQ6VXNlcjE3MDI3MA==", starrableId: "` + idRepo + `"}) {
-				  clientMutationId
-				}
-			  }
-			`
-		};
-		me.request(data, onSuccess, onError);
-	};
-	me.starRepo = function(idRepo, onSuccess, onError){
-		var data = {
-			query:`
-			mutation {
-				addStar(input: {
-				  clientMutationId: "MDQ6VXNlcjE3MDI3MA==", starrableId: "` + idRepo + `"}) {
-				  clientMutationId
-				}
-			  }
-			  
-			`
-		};
-		me.request(data, onSuccess, onError);
-	};
-	me.request = function(data, onSuccess, onError){
-		me.loading = true;
-		var ajaxConfig = me.getAjax()
-		ajaxConfig.data = JSON.stringify(data);
-		http(ajaxConfig).then(function (result, status) {
-			me.loading = false;
-			if(typeof(onSuccess) == 'function')
-				onSuccess(result, status);
-		}, function(result,status){
-			me.loading = false;
-			if(typeof(onError) == 'function')
-				onError(result, status);
-		})
-	}
-}
+
 
 //####################################################
 //               DIRECTIVE ->
@@ -565,253 +467,3 @@ function setCover(el) {
 function closeChartDialog(it) {
 	$(it).parent().modal('close');
 };
-
-//####################################################
-//               Common Function ->
-//####################################################
-function isSafeToUse(obj, prop) {
-    try {
-        if (obj == undefined || obj == null || prop == null || prop == '')
-            return false;
-
-        if (prop.indexOf('.') >= 0) {
-            var s = prop.split('.');
-            var k = obj;
-            for (var i = 0; i < s.length; i++) {
-                if (typeof (k[s[i]]) != 'undefined' && k[s[i]] != null) {
-                    k = k[s[i]];
-                } else {
-                    return false;
-                }
-            }
-            return true;
-        } else {
-            return typeof (obj[prop]) != 'undefined' && obj[prop] != null;
-        }
-    } catch (e) {
-        return false;
-    }
-
-}
-function queryString (name) {
-	var url = window.location.href;
-	if (url.indexOf('?') >= 0) {
-		var parte = url.split('?')[1].split('#')[0];
-		if (parte.indexOf('&') >= 0) {
-			var retorno = '';
-			$(parte.split('&')).each(function (index, item) {
-				var chaveValor = item.split('=');
-				if (chaveValor[0] == name) {
-					retorno = chaveValor[1];
-					return false;
-				}
-			});
-			return retorno;
-		} else {
-			if (parte.indexOf('=') >= 0 && parte.split('=')[0] == name) {
-				var str = parte.split('=')[1];
-				return str.split('#')[0];
-			}
-		}
-	}
-}
-function getPropertyByName(obj, prop, runFunction) {
-    try {
-        if (prop == '' || prop == null || prop == undefined) {
-            if (obj != undefined && obj != null) {
-                return obj;
-            } else {
-                return null;
-            }
-        }
-        if (isSafeToUse(obj, prop)) {
-            if (prop.indexOf('.') >= 0) {
-                var s = prop.split('.');
-                var k = obj;
-                for (var i = 0; i < s.length; i++) {
-                    if (k.hasOwnProperty(s[i])) {
-                        k = k[s[i]];
-                    } else {
-                        return null;
-                    }
-                }
-                return k;
-            } else {
-                if (typeof (obj[prop]) == 'function' && (runFunction == null || runFunction == true)) {
-                    return obj[prop]();
-                } else {
-                    return obj[prop];
-                }
-            }
-        }
-        return null;
-    } catch (e) {
-        return null;
-    }
-};
-Array.prototype.summaryze = function(countProperty){
-	var _sum = this.select(countProperty).sum();
-	for(var i=0;i<this.length;i++){
-		this[i].percentage = (100 * this[i][countProperty]/_sum).toFixed(1);
-	}
-	return this;
-}
-Array.prototype.countDistinct = function(){
-	var obj = {};
-	this.forEach(y => { 
-		if(obj.hasOwnProperty(y)){
-			obj[y]+=1;
-		}else{
-			obj[y]=1;
-		}
-	});
-	return objToArray(obj);
-};
-function objToArray(obj) {
-    if (obj == null || Object.keys(obj).length == 0)
-        return
-
-    var a = [];
-    obj.every(function (item, label) {
-        if (typeof (item) == 'object' || typeof (item) == 'number' || typeof (item) == 'string') {
-            a.push({label:label, count:item});
-        } else if (typeof (item) == 'function') {
-            a.push(item());
-        }
-    });
-
-    return a;
-}
-if (Object.getOwnPropertyDescriptor(Object.prototype, 'every') == undefined) {
-    Object.defineProperty(Object.prototype, "every", {
-        enumerable: false,
-        value: function (fn) {
-            if (this == null || typeof (fn) != 'function')
-                return;
-            var keys = Object.keys(this);
-            for (var i = 0; i < keys.length; i++) {
-                fn(this[keys[i]], keys[i])
-            }
-        }
-    });
-}
-Array.prototype.select = function (obj) {
-    if (obj == undefined || obj == null || obj.length == 0)
-        return [];
-
-    var a = [];
-    for (var i = 0; i < this.length; i++) {
-        var item = this[i];
-        var n = {};
-        if (Array.isArray(obj)) {
-            for (var j = 0; j < obj.length; j++) {
-                if (item.hasOwnProperty(obj[j]))
-                    n[obj[j]] = item[obj[j]];
-            }
-            a.push(n);
-        } else if (typeof (obj) == 'string') {
-            if (item.hasOwnProperty(obj)) {
-                a.push(item[obj]);
-            }
-
-        } else {
-            for (k in obj) {
-                if (typeof (obj[k]) == 'function') {
-                    n[k] = obj[k](item);
-                } else if (typeof (obj[k]) == 'number') {
-                    n[k] = obj[k];
-                }
-                else {
-                    n[k] = item[obj[k]];
-                }
-            }
-            a.push(n);
-        }
-    }
-
-    return a;
-};
-Array.prototype.sum = function (prop) {
-    if (this == null || this.length == 0)
-        return 0;
-
-    var s = 0;
-    if (prop == null) {
-        for (var i = 0; i < this.length; i++) {
-            s += parseFloat(this[i]);
-        }
-    } else {
-        for (var i = 0; i < this.length; i++) {
-            if (this[i][prop] != null) {
-                if (typeof (this[i][prop]) == 'function') {
-                    s += parseFloat(this[i][prop]()||0);
-                }else if (isNaN(this[i][prop]) == false) {
-                    s += parseFloat(this[i][prop]);
-                }
-                    
-            }
-              
-        }
-    }
-
-    return s;
-};
-Array.prototype.orderBy = function (prop) {
-    if (this == null || this.length == 0)
-        return this;
-
-    if (prop == null)
-        return this.sort(function (a, b) { return a - b });
-
-    if (isNaN(this[0][prop])) {
-        return this.sort(function (a, b) {
-            return a[prop].localeCompare(b[prop]);
-        });
-    } else {
-        return this.sort(function (a, b) {
-            return a[prop] - b[prop];
-        });
-    }
-
-
-};
-Array.prototype.orderDescBy = function (prop) {
-    if (this == null || this.length == 0)
-        return this;
-
-    if (prop == null)
-        return this;
-
-
-    if (isNaN(this[0][prop])) {
-        return this.sort(function (a, b) {
-            return b[prop].localeCompare(a[prop]);
-        });
-    } else {
-        return this.sort(function (a, b) {
-            return b[prop] - a[prop];
-        });
-    }
-
-};
-Array.prototype.sum= function(){
-	var s = 0;
-	this.forEach(y => s += y);
-	return s;
-}
-function isNotSafeToUse(obj, prop) {
-    return isSafeToUse(obj, prop) == false;
-}
-function compareIfSafe(obj, prop, value) {
-    try {
-        if (typeof (obj) == 'undefined')
-            return false;
-
-        var item = getPropertyByName(obj, prop);
-        return item != null ? item == value : false;
-    } catch (e) {
-        return false;
-    }
-
-}
-
