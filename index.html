@@ -28,7 +28,7 @@
 						<li>
 							<a ng-click="getTokenForAnnonymous()" id="logIn" ng-show="userStatus==Status.logOut">LogIn</a>
 						</li>
-						<li class="imgLogin" ng-if="userStatus=Status.logIn && loggedUserInfo != null" style="background:url({{loggedUserInfo.avatar_url}}) no-repeat;background-size: contain;">
+						<li class="imgLogin" title="{{'Hi ' + loggedUserInfo.name + '! Nice to have you here.'}}" ng-if="userStatus=Status.logIn && loggedUserInfo != null" style="background:url({{loggedUserInfo.avatar_url}}) no-repeat;background-size: contain;">
 							&nbsp;
 						</li>
 					</ul>
@@ -117,8 +117,8 @@
 								</label>
 							  </p>
 							  <a  ng-click="startItem(item)" class="secondary-content">
-								  <i class="material-icons" ng-class="{loading:item.loadingStar==true}" title="add Star" ng-hide="item.starred==true">star_border</i>
-								  <i class="material-icons" ng-class="{loading:item.loadingStar==true}" title="remove Star" ng-show="item.starred==true">star</i>
+								  <i class="material-icons" ng-class="{looping:item.loadingStar==true}" title="add Star" ng-hide="item.starred==true">star_border</i>
+								  <i class="material-icons" ng-class="{looping:item.loadingStar==true}" title="remove Star" ng-show="item.starred==true">star</i>
 								</a>
 							</li>
 							

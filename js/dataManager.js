@@ -5,35 +5,19 @@
 function registerDataFunctions(me, http, timeout){
 	me._url = "https://api.github.com/graphql";
 	me.anonymousAccessToken = null;
+	me.loggedMutationID = null;
 	me.getTokenForAnnonymous = function(){
 		OAuth.popup('github').then(github => {
-			console.log('github:', github);
+			//console.log('github:', github);
 			me.anonymousAccessToken =github.access_token;
 			github.get('/user').then(data => {
-			  console.log('self data:', data);
+			  //console.log('self data:', data);
 			  me.onUserLogIn(data);
+			  me.getClientMutationId(data.login, function(cData){
+				me.loggedMutationID = cData.data.data.user.id
+			  })
 			})
 		});
-	};
-	me.getUserInfoAndLogin = function(code, status, after){
-		
-		var url = 'https://github.com/login/oauth/access_token?client_id=e770f3e7797381a5a74f&client_secret=b6803588acb1064c5b253df05a268914ff711424&code='+code+'&state=bdsdsew33434fdd&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html'
-		
-		var ajaxConfig = { 
-			url:url,
-			headers:{
-                "Content-Type": "application/json",
-				"Authorization": "bearer 2e40c1132257a3d7ef30e3986120516820b1b2dc " 
-			}
-		};
-		http(ajaxConfig).then(function (result, status) {
-			console.log('é tetra!!!!',result);
-			if(typeof(after) == 'function')
-				after();
-		}, function(result,status){
-			me.toastOk('Oh No! we had a problem during the login process :(')
-			console.log('error', result)
-		})
 	};
 	me.getPageStatus = function(){
 		return JSON.stringify(
@@ -55,7 +39,6 @@ function registerDataFunctions(me, http, timeout){
 	};
 	me.aut = function(){
 		var st = me.getPageStatus();
-		window.location.href = 'https://github.com/login/oauth/authorize?client_id=e770f3e7797381a5a74f&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html&state=' + me.getPageStatus()
 	}
 	me.getAjax = function(){
 		var ajaxConfig = { url:me._url , cache: false };
@@ -66,6 +49,17 @@ function registerDataFunctions(me, http, timeout){
 			"Authorization": "bearer "  + me.anonymousAccessToken
 		};
 		return ajaxConfig;
+	};
+	me.getClientMutationId = function(login, onSuccess, onError){
+		var data = {
+			query: `query { 
+				user(login:"` + login + `"){
+					id
+					name
+					}
+				}`
+			};
+			me.request(data, onSuccess, onError);
 	}
 	me.queryOauth = function(name, onSuccess, onError){
 		var data = {
@@ -108,8 +102,6 @@ function registerDataFunctions(me, http, timeout){
 	}
 	me.getCredencial = function(){
 		return {
-			client_id:'e770f3e7797381a5a74f',
-			client_secret:'b6803588acb1064c5b253df05a268914ff711424'
 		};
 	};
 	me.getUserProfile = function(userName, onSuccess, onFail){
@@ -171,7 +163,7 @@ function registerDataFunctions(me, http, timeout){
 			query:`
 			mutation {
 				addStar(input: {
-				  clientMutationId: "MDQ6VXNlcjE3MDI3MA==", starrableId: "` + idRepo + `"}) {
+				  clientMutationId: "`+me.loggedMutationID +`", starrableId: "` + idRepo + `"}) {
 				  clientMutationId
 				}
 			  }

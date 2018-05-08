@@ -29,11 +29,6 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 	me.mainObjs = [];
 	me.loadCtrl = function () {
 		
-		var code = queryString('code');
-		if(code != null){
-			var status = queryString('state')
-			me.onLoginCallBack(code, status);
-		}
 		me.colors = me.getColors();
 		$timeout(function(){
 			skipIntroduction();
@@ -44,13 +39,7 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 //###########################################
 //	EVENTS
 //###########################################
-	me.onLoginCallBack = function(code, status){
-		me.backToPastState(status, function(){
-			me.getUserInfoAndLogin(code, status);
-		});
-		
-		
-	};
+	
 	me.onUserLogIn = function(data){
 		me.userStatus = me.Status.logIn;
 		me.loggedUserInfo = data;
