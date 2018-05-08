@@ -57,11 +57,11 @@ function registerDataFunctions(me, http, timeout){
 			}
 		};
 		http(ajaxConfig).then(function (result, status) {
-			console.log('é tetra',result);
+			console.log('é tetra!!!!',result);
 			if(typeof(after) == 'function')
 				after();
 		}, function(result,status){
-			console.log('merda', result)
+			console.log('error', result)
 		})
 	};
 	me.getPageStatus = function(){
@@ -92,7 +92,7 @@ function registerDataFunctions(me, http, timeout){
 		ajaxConfig.cache = false;
 		ajaxConfig.headers= {
 			"Content-Type": "application/json",
-			"Authorization": "bearer bc65744075d9e5b5e7332820a3300a728b0eb310" 
+			"Authorization": "bearer 2e40c1132257a3d7ef30e3986120516820b1b2dc " 
 		};
 		return ajaxConfig;
 	}

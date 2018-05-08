@@ -1,23 +1,24 @@
 
-var mainApp = angular.module('mainApp', []).config(function($sceDelegateProvider, $httpProvider, $sceProvider) {
+var mainApp = angular.module('mainApp', []);
+// .config(function($sceDelegateProvider, $httpProvider, $sceProvider) {
 	
 	
-	$sceDelegateProvider.resourceUrlWhitelist([
-	  // Allow same origin resource loads.
-	  'self',
-	  // Allow loading from our assets domain.  Notice the difference between * and **.
-	  'https://github.com/login/oauth',
-	  'https://github.com/login/',
-	  'https://github.com/' ,
-	  'http://github.com/' ,
-	  'https://github.com/login/oauth/access_token'
-	]);
+// 	$sceDelegateProvider.resourceUrlWhitelist([
+// 	  // Allow same origin resource loads.
+// 	  'self',
+// 	  // Allow loading from our assets domain.  Notice the difference between * and **.
+// 	  'https://github.com/login/oauth',
+// 	  'https://github.com/login/',
+// 	  'https://github.com/' ,
+// 	  'http://github.com/' ,
+// 	  'https://github.com/login/oauth/access_token'
+// 	]);
   
-	// The blacklist overrides the whitelist so the open redirect here is blocked.
-	$sceDelegateProvider.resourceUrlBlacklist([
+// 	// The blacklist overrides the whitelist so the open redirect here is blocked.
+// 	$sceDelegateProvider.resourceUrlBlacklist([
 	 
-	]);
-  });
+// 	]);
+//   });
 
 mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 	var me = $scope;
