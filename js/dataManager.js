@@ -61,7 +61,7 @@ function registerDataFunctions(me, http, timeout){
 			};
 			me.request(data, onSuccess, onError);
 	}
-	me.queryOauth = function(name, onSuccess, onError){
+	me.query = function(name, onSuccess, onError){
 		var data = {
 		query: `query { 
 			user(login:"` + name + `"){
@@ -117,7 +117,7 @@ function registerDataFunctions(me, http, timeout){
 					onFail(response)
 		});
 	}
-	me.query = function(userName, onSuccess, onFail){
+	me.queryRest = function(userName, onSuccess, onFail){
 		var user = null;
 		me.loading = true;
 		me.getUserProfile(userName, function(userResponse){

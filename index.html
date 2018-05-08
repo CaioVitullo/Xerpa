@@ -72,7 +72,7 @@
 				<div class="row h100" ng-show="currentUser != null">
 					<div class="col s12 m4 l3 xl3 tac h100  vAligTop15 ">
 						<div class="deep-purple darken-1  halfH profileUpper">
-							<div ng-if="currentUser != null" style="background-image: url({{currentUser.avatar_url}})" class="imgProfile">&nbsp;</div>
+							<div ng-if="currentUser != null" style="background-image: url({{currentUser.avatarUrl}})" class="imgProfile">&nbsp;</div>
 							<label  ng-bind="currentUser.name"></label>
 							<label class="whiteIsh" ng-bind="currentUser.nick"></label>
 						</div>
@@ -92,7 +92,7 @@
 							</label>
 							<label>
 								<i class="material-icons">language</i>
-								<a target="_blannk" href="{{currentUser.html_url}}"> {{beautifyStr(currentUser.html_url)}}</a>
+								<a target="_blannk" href="{{currentUser.websiteUrl}}"> {{beautifyStr(currentUser.websiteUrl)}}</a>
 							</label> 
 							
 						</div>
@@ -102,23 +102,23 @@
 						
 						<ul class="collection w100 mainList">
 							
-							<li class="collection-item avatar tal hoverable z-depth-1" ng-repeat="item in currentUser.starredRepositories">
+							<li class="collection-item avatar tal hoverable z-depth-1" ng-repeat="item in currentUser.starredRepositories.edges">
 							  
-							  <span class="title" ng-bind="item.full_name">Title</span>
+							  <span class="title" ng-bind="item.node.nameWithOwner">Title</span>
 							  <p >First Line 
-								{{item.description}}
+								{{item.node.description}}
 								<br>
 								<label>
-									{{item.language}} | {{item.stargazers_count}} stargazer
+									{{item.node.primaryLanguage.name}} | {{item.node.stargazers.totalCount}} stargazer
 								</label>
 								<label class="right">
-									<i class="material-icons" title="Locked" ng-show="item.private==true">lock</i>
-									<i class="material-icons" title="Fork" ng-show="item.fork">device_hub</i>
+									<i class="material-icons" title="Locked" ng-show="item.node.isLocked==true">lock</i>
+									<i class="material-icons" title="Fork" ng-show="item.node.isFork">device_hub</i>
 								</label>
 							  </p>
-							  <a  ng-click="startItem(item)" class="secondary-content">
-								  <i class="material-icons" ng-class="{looping:item.loadingStar==true}" title="add Star" ng-hide="item.starred==true">star_border</i>
-								  <i class="material-icons" ng-class="{looping:item.loadingStar==true}" title="remove Star" ng-show="item.starred==true">star</i>
+							  <a  ng-click="startItem(item.node)" class="secondary-content">
+								  <i class="material-icons" ng-class="{looping:item.node.loadingStar==true}" title="add Star" ng-hide="item.node.starred==true">star_border</i>
+								  <i class="material-icons" ng-class="{looping:item.node.loadingStar==true}" title="remove Star" ng-show="item.node.starred==true">star</i>
 								</a>
 							</li>
 							

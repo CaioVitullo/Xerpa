@@ -75,7 +75,7 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 //	METHODS
 //###########################################
 me.searchUserByName = function(){
-	if(isNotSafeToUse(me, 'queryOauth')){
+	if(isNotSafeToUse(me, 'query')){
 		console.warn('Error!!! Data interface has not been implemented')
 		return false;
 	}
@@ -85,6 +85,10 @@ me.searchUserByName = function(){
 	}
 	if(me.loading ==true)
 		return
+	if(me.userStatus == me.Status.logOut){
+		me.pleaseSignIn()
+		return;
+	}
 	me.clean();
 	me.query(me.searchTxt,me.onFindUser, me.userHasNotBeenFound);
 };
@@ -116,25 +120,29 @@ me.showUserResult = function(user){
 		})
 		
 	}
-	
-	me.currentUser = user;
+	me.currentUser = user.data.data.user;
+	console.log(user);
 	me.searchTxtPlaceholder = 'try another username...'
 	me.currentUser.nick = me.searchTxt;
-	console.log(me.currentUser);
+	
 	//me.searchTxt='';
 	me.countLangType();
 }
 me.countLangType = function(){
 	var list = [];
 	
-	me.currentUser.starredRepositories.forEach(y => {
-		if(isSafeToUse(y,'language'))
-			list.push(y.language)
+	me.currentUser.starredRepositories.edges.forEach(y => {
+		if(isSafeToUse(y,'node.primaryLanguage.name'))
+			list.push(y.node.primaryLanguage.name)
 	});
 	list = list.countDistinct().orderDescBy('count');
 	me.langTypes = list.summaryze('count');
 };
-
+me.pleaseSignIn = function(){
+	me.toastOk('Please logIn before! - <a onclick="toastCallback()"> OK!</a>')
+	$('#logIn').addClass('shake');
+	window.setTimeout(function(){$('#logIn').removeClass('shake');}, 1000)
+};
 me.startItem = function(repo){
 	if(isNotSafeToUse(me, 'starRepo')){
 		console.warn('Error!!! Data interface has not been implemented')
@@ -148,9 +156,7 @@ me.startItem = function(repo){
 		return
 
 	if(me.userStatus == me.Status.logOut){
-		me.toastOk('Please logIn before! - <a onclick="toastCallback()"> OK!</a>')
-		$('#logIn').addClass('shake');
-		window.setTimeout(function(){$('#logIn').removeClass('shake');}, 1000)
+		me.pleaseSignIn()
 		return;
 	}
 	repo.loadingStar = true;
