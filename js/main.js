@@ -121,12 +121,21 @@ me.showUserResult = function(user){
 		
 	}
 	me.currentUser = user.data.data.user;
+	me.matchRepoId();
 	console.log(user);
 	me.searchTxtPlaceholder = 'try another username...'
 	me.currentUser.nick = me.searchTxt;
 	
 	//me.searchTxt='';
 	me.countLangType();
+}
+me.matchRepoId = function(){
+	if(me.loggedStarredIDs == null || me.loggedStarredIDs.length == 0)
+		return
+	
+	me.currentUser.starredRepositories.edges.forEach(repo =>{
+		repo.node.starred = me.loggedStarredIDs.indexOf(repo.node.id) >= 0;
+	});
 }
 me.countLangType = function(){
 	var list = [];

@@ -3,9 +3,16 @@
 //####################################################
 
 function registerDataFunctions(me, http, timeout){
+//###########################################
+//	PROPERTY
+//###########################################
 	me._url = "https://api.github.com/graphql";
 	me.anonymousAccessToken = null;
 	me.loggedMutationID = null;
+	me.loggedStarredIDs=[];
+//###########################################
+//	METHODS
+//###########################################
 	me.getTokenForAnnonymous = function(){
 		OAuth.popup('github').then(github => {
 			//console.log('github:', github);
@@ -15,6 +22,11 @@ function registerDataFunctions(me, http, timeout){
 			  me.onUserLogIn(data);
 			  me.getClientMutationId(data.login, function(cData){
 				me.loggedMutationID = cData.data.data.user.id
+				if(isSafeToUse(cData,'data.data.user.starredRepositories.edges')){
+					cData.data.data.user.starredRepositories.edges.forEach(repo => {
+						me.loggedStarredIDs.push(repo.node.id);
+					})
+				}
 			  })
 			})
 		});
@@ -56,6 +68,13 @@ function registerDataFunctions(me, http, timeout){
 				user(login:"` + login + `"){
 					id
 					name
+					starredRepositories(last:100){
+						edges{
+						  node{
+							id
+						  }
+						}
+					  }
 					}
 				}`
 			};
