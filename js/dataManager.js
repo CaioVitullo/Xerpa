@@ -4,48 +4,17 @@
 
 function registerDataFunctions(me, http, timeout){
 	me._url = "https://api.github.com/graphql";
-	
-	const config = {
-		GITHUB_CLIENT_ID: 'e770f3e7797381a5a74f',
-		GITHUB_CLIENT_SECRET: 'b6803588acb1064c5b253df05a268914ff711424'
-	}
-
-	me.tryLogin = function(){
-
-		
-
-		
-        const AUTH_URL_PATH = 'https://api.github.com/authorizations'
-        const bytes = name.trim() + ':' + pwd.trim()
-        const encoded = base64.encode(bytes)
-        
-        var ajaxConfig = { 
-			url:AUTH_URL_PATH,
-            cache: false ,
-            method : 'POST',
-            headers:{
-                'Authorization': 'Basic ' + encoded,
-                'User-Agent': 'GitHub Issue Browser',
-                'Content-Type': 'application/json; charset=utf-8',
-                'Accept': 'application/vnd.github.inertia-preview+json'
-            },
-            data : JSON.stringify({
-                client_id: config.GITHUB_CLIENT_ID,
-                client_secret: config.GITHUB_CLIENT_SECRET,
-                scopes: ['user', 'repo'],
-                note: 'not abuse'
-            })
-		};
-		
-		
-		http(ajaxConfig).then(function (result, status) {
-			console.log(result)
-		}, function(result,status){
-			console.log(result)
-        })
-        
+	me.anonymousAccessToken = null;
+	me.getTokenForAnnonymous = function(){
+		OAuth.popup('github').then(github => {
+			console.log('github:', github);
+			me.anonymousAccessToken =github.access_token;
+			github.get('/user').then(data => {
+			  console.log('self data:', data);
+			  me.onUserLogIn(data);
+			})
+		});
 	};
-
 	me.getUserInfoAndLogin = function(code, status, after){
 		
 		var url = 'https://github.com/login/oauth/access_token?client_id=e770f3e7797381a5a74f&client_secret=b6803588acb1064c5b253df05a268914ff711424&code='+code+'&state=bdsdsew33434fdd&redirect_uri=https://caiovitullo.github.io/Xerpa/index.html'
@@ -94,7 +63,7 @@ function registerDataFunctions(me, http, timeout){
 		ajaxConfig.cache = false;
 		ajaxConfig.headers= {
 			"Content-Type": "application/json",
-			"Authorization": "bearer 2e40c1132257a3d7ef30e3986120516820b1b2dc " 
+			"Authorization": "bearer "  + me.anonymousAccessToken
 		};
 		return ajaxConfig;
 	}

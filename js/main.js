@@ -22,11 +22,13 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 	me.langTypes = null		// resume of repos languages
 	me.colors = null;
 	me.userStatus = me.Status.logOut;
+	me.loggedUserInfo = null;
 //###########################################
 //	INIT
 //###########################################
 	me.mainObjs = [];
 	me.loadCtrl = function () {
+		
 		var code = queryString('code');
 		if(code != null){
 			var status = queryString('state')
@@ -35,7 +37,7 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 		me.colors = me.getColors();
 		$timeout(function(){
 			skipIntroduction();
-		},1000);
+		},700);
 		
 	};
 	
@@ -49,6 +51,12 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 		
 		
 	};
+	me.onUserLogIn = function(data){
+		me.userStatus = me.Status.logIn;
+		me.loggedUserInfo = data;
+		if (!me.$$phase)
+			me.$apply();
+	}
 	me.backToPastState = function(status, after){
 		var pageStatusBefore = me.retrievePageStatus(status);
 		if(pageStatusBefore != null){
@@ -78,7 +86,7 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 //	METHODS
 //###########################################
 me.searchUserByName = function(){
-	if(isNotSafeToUse(me, 'query')){
+	if(isNotSafeToUse(me, 'queryOauth')){
 		console.warn('Error!!! Data interface has not been implemented')
 		return false;
 	}
@@ -152,43 +160,48 @@ me.startItem = function(repo){
 
 	if(me.userStatus == me.Status.logOut){
 		me.toastOk('Please logIn before! - <a onclick="toastCallback()"> OK!</a>')
+		$('#logIn').addClass('shake');
+		window.setTimeout(function(){$('#logIn').removeClass('shake');}, 1000)
 		return;
 	}
-
+	repo.loadingStar = true;
 	if(compareIfSafe(repo, 'starred', true)){
 		me.removeStar(repo.id, 
 			function(result){
 				repo.starred=false;
-				me.onStarOk(result);
-				me.toastOk('Repo unStarred with success!  <a onclick="toastCallback()"> OK!</a>')
+				repo.loadingStar = false;
+				me.onUnStarOk(result);
 			} , 
 			function(result){
 				repo.starred=false;
+				repo.loadingStar = false;
 				me.onStarNotOk(result);
-				me.toastOk('Oh No!We got some problema.  <a onclick="toastCallback()"> OK!</a>')
 			})
 	
 	}else{
 		me.starRepo(repo.id, 
 			function(result){
 				repo.starred=true;
+				repo.loadingStar = false;
 				me.onStarOk(result);
-				me.toastOk('Repo starred with success!  <a onclick="toastCallback()"> OK!</a>')
 			} , 
 			function(result){
 				repo.starred=false;
+				repo.loadingStar = false;
 				me.onStarNotOk(result);
-				me.toastOk('Oh No!We got some problema.  <a onclick="toastCallback()"> OK!</a>')
 			})
 	
 	}
 	
 };
+me.onUnStarOk = function(result){
+	me.toastOk('Repo unStarred with success!  <a onclick="toastCallback()"> OK!</a>')
+}
 me.onStarOk = function(result){
-	console.log('ok', result);
+	me.toastOk('Repo starred with success!  <a onclick="toastCallback()"> OK!</a>')
 };
 me.onStarNotOk = function(result){
-	console.log('not ok', result);
+	me.toastOk('Oh No!We got some problema.  <a onclick="toastCallback()"> OK!</a>')
 }
 me.beautifyStr = function(str){
 	if(typeof(str)=='string')
