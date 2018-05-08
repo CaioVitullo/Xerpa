@@ -62,6 +62,7 @@ function registerDataFunctions(me, http, timeout){
 			if(typeof(after) == 'function')
 				after();
 		}, function(result,status){
+			me.toastOk('Oh No! we had a problem during the login process :(')
 			console.log('error', result)
 		})
 	};
