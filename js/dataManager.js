@@ -53,7 +53,8 @@ function registerDataFunctions(me, http, timeout){
 		var ajaxConfig = { 
 			url:url,
 			headers:{
-                'Content-Type': 'application/json; ',
+                "Content-Type": "application/json",
+				"Authorization": "bearer 2e40c1132257a3d7ef30e3986120516820b1b2dc " 
 			}
 		};
 		http(ajaxConfig).then(function (result, status) {

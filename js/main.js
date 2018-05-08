@@ -1,24 +1,6 @@
 
 var mainApp = angular.module('mainApp', []);
-// .config(function($sceDelegateProvider, $httpProvider, $sceProvider) {
-	
-	
-// 	$sceDelegateProvider.resourceUrlWhitelist([
-// 	  // Allow same origin resource loads.
-// 	  'self',
-// 	  // Allow loading from our assets domain.  Notice the difference between * and **.
-// 	  'https://github.com/login/oauth',
-// 	  'https://github.com/login/',
-// 	  'https://github.com/' ,
-// 	  'http://github.com/' ,
-// 	  'https://github.com/login/oauth/access_token'
-// 	]);
-  
-// 	// The blacklist overrides the whitelist so the open redirect here is blocked.
-// 	$sceDelegateProvider.resourceUrlBlacklist([
-	 
-// 	]);
-//   });
+
 
 mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 	var me = $scope;
@@ -61,12 +43,13 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 //	EVENTS
 //###########################################
 	me.onLoginCallBack = function(code, status){
-		me.getUserInfoAndLogin(code, status,function(){
-			me.backToPastState(status);
+		me.backToPastState(status, function(){
+			me.getUserInfoAndLogin(code, status);
 		});
 		
+		
 	};
-	me.backToPastState = function(status){
+	me.backToPastState = function(status, after){
 		var pageStatusBefore = me.retrievePageStatus(status);
 		if(pageStatusBefore != null){
 			me.currentPageIndex = pageStatusBefore.currentPageIndex;
@@ -76,6 +59,9 @@ mainApp.controller('ctrl', function ($http, $scope, $timeout, $interval) {
 				me.searchUserByName();
 			}
 		}
+		after();
+		
+		
 	}
 	me.onInputChange = function(e){
 		if(e.keyCode == me.keyCodes.ESC)
